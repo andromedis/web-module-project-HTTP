@@ -37,6 +37,7 @@ const EditMovieForm = (props) => {
         e.preventDefault();
 		axios.put(`http://localhost:5000/api/movies/${id}`, movie)
 			.then(res => {
+				console.log(res.data);
 				props.setMovies(res.data);
 				push(`/movies/${id}`);
 			})
@@ -79,7 +80,7 @@ const EditMovieForm = (props) => {
 				</div>
 				<div className="modal-footer">			    
 					<input type="submit" className="btn btn-info" value="Save"/>
-					<Link to={`/movies/1`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
+					<Link to={`/movies/${id}`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
 				</div>
 			</form>
 		</div>

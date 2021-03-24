@@ -27,13 +27,9 @@ const App = (props) => {
   }, []);
 
   const deleteMovie = (id) => {
-    console.log('before delete');
-    console.log(movies);
     setMovies(movies.filter(
       movie => movie.id !== Number(id)
     ));
-    console.log('after delete');
-    console.log(movies);
   }
 
   const addToFavorites = (movie) => {

@@ -3,10 +3,13 @@ import { Link, useParams, useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 
+import DeleteMovieModal from './DeleteMovieModal';
+
 const Movie = (props) => {
-    const { addToFavorites } = props;
+    const { addToFavorites, deleteMovie } = props;
 
     const [movie, setMovie] = useState('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const { id } = useParams();
     const { push } = useHistory();
@@ -19,15 +22,37 @@ const Movie = (props) => {
             .catch(err=>{
                 console.log(err);
             })
-    }, [id]);
+    }, []);
+
+    const requestDelete = () => {
+        axios.delete(`http://localhost:5000/api/movies/${id}`)
+            .then(res => {
+                deleteMovie(id);
+                push('/movies');
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+
+    const toggleDeleteModal = () => {
+        setShowDeleteModal(!showDeleteModal);
+    }
 
     return(<div className="modal-page col">
         <div className="modal-dialog">
             <div className="modal-content">
-                <div className="modal-header">						
+                <div className="modal-header">					
                     <h4 className="modal-title">{movie.title} Details</h4>
                 </div>
                 <div className="modal-body">
+                    {
+                        showDeleteModal && 
+                        <DeleteMovieModal 
+                            toggleDeleteModal={toggleDeleteModal} 
+                            requestDelete={requestDelete}
+                        />
+                    }
                     <div className="flexContainer">
 
                         <section className="movie-details">
@@ -48,12 +73,28 @@ const Movie = (props) => {
                                 <p><strong>{movie.description}</strong></p>
                             </div>
                         </section>
-                        
+
                         <section>
-                            <span className="m-2 btn btn-dark">Favorite</span>
-                            <Link to={`/movies/edit/${movie.id}`} className="m-2 btn btn-success">Edit</Link>
-                            <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete"/></span>
+                            <span 
+                                className="m-2 btn btn-dark"
+                                onClick={() => addToFavorites(movie)}
+                                >Favorite
+                            </span>
+                            <Link 
+                                to={`/movies/edit/${movie.id}`} 
+                                className="m-2 btn btn-success"
+                                >Edit
+                            </Link>
+                            <span className="delete">
+                                <input 
+                                    type="button" 
+                                    className="m-2 btn btn-danger"
+                                    onClick={toggleDeleteModal} 
+                                    value="Delete" 
+                                    />
+                            </span>
                         </section>
+
                     </div>
                 </div>
             </div>

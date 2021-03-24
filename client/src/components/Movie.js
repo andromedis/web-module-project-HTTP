@@ -77,6 +77,7 @@ const Movie = (props) => {
                         <section>
                             <span 
                                 className="m-2 btn btn-dark"
+                                onClick={() => addToFavorites(movie)}
                                 >Favorite
                             </span>
                             <Link 
